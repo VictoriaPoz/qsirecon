@@ -21,14 +21,59 @@ nodes:
             algorithm: dhollander
     qsirecon_suffix: MRtrix3_fork-SS3T_act-HSVS
     software: MRTrix3
--   action: autotrack
+-   action: tractography
     input: ss3t_csd
-    name: autotrackcsd
+    name: track_ifod2
     parameters:
-        tolerance: 22,26,30
-        track_id: Association
-        track_voxel_ratio: 2.0
-        yield_rate: 1.0e-06
-    qsirecon_suffix: DSIStudio
-    software: DSI Studio
+        method_5tt: hsvs
+        sift2: {}
+        tckgen:
+            algorithm: iFOD2
+            backtrack: true
+            crop_at_gmwmi: true
+            max_length: 250
+            min_length: 30
+            power: 0.33
+            quiet: true
+            select: 10000000.0
+        use_5tt: true
+        use_sift2: true
+    qsirecon_suffix: MRtrix3_fork-SS3T_act-HSVS
+    software: MRTrix3
+-   action: connectivity
+    input: track_ifod2
+    name: mrtrix_conn
+    parameters:
+        tck2connectome:
+        -   measure: sift_invnodevol_radius2_count
+            scale_invnodevol: true
+            search_radius: 2
+            stat_edge: sum
+            symmetric: true
+            use_sift_weights: true
+            zero_diagonal: false
+        -   length_scale: length
+            measure: radius2_meanlength
+            scale_invnodevol: false
+            search_radius: 2
+            stat_edge: mean
+            symmetric: true
+            use_sift_weights: false
+            zero_diagonal: false
+        -   measure: radius2_count
+            scale_invnodevol: false
+            search_radius: 2
+            stat_edge: sum
+            symmetric: true
+            use_sift_weights: false
+            zero_diagonal: false
+        -   measure: sift_radius2_count
+            scale_invnodevol: false
+            search_radius: 2
+            stat_edge: sum
+            symmetric: true
+            use_sift_weights: true
+            zero_diagonal: false
+    qsirecon_suffix: MRtrix3_fork-SS3T_act-HSVS
+    software: MRTrix3
 space: T1w
